@@ -8,15 +8,15 @@ import "./Swap.css"
 const Swap = () => {
   const [provider, setProvider] = useState<EIP1193Provider>()
   const [userAccount, setUserAccount] = useState<string>("")
+  const [chaindId, setChainId] = useState<string>("")
 
-  provider?.on?.("accountsChanged", (accounts: any) => {
-    setUserAccount(accounts[0])
-  })
+
 
   useEffect(() => {
     const getAccounts2 = async () => {
       if (!provider) return
-      const chainId = await provider.request({ method: "eth_chainId" })
+      const chainId: string = await provider.request({ method: "eth_chainId" }) as string
+      setChainId(chainId)
       console.log("chainId", chainId)
       const accounts: string[] = (await provider.request({ method: "eth_requestAccounts" })) as string[]
       console.log("account2", accounts)
@@ -34,7 +34,7 @@ const Swap = () => {
 
   return (
     <section id="swap">
-      <DiscoverWalletProviders setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} />
+
     </section>
   )
 }

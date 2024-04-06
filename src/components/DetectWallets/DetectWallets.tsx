@@ -2,14 +2,20 @@ import { useState } from "react";
 import useSyncProviders from "../../hooks/useSyncProviders";
 import { EIP6963ProviderDetail } from "../../types/Metamask";
 
-import './DetectWallets.css'
+import "./DetectWallets.css";
 
-const DiscoverWalletProviders = () => {
+interface DiscoverWalletProvidersProps {
+  setProvider: (provider: any) => void;
+}
+const DiscoverWalletProviders = ({
+  setProvider,
+}: DiscoverWalletProvidersProps) => {
   const [selectedWallet, setSelectedWallet] = useState<EIP6963ProviderDetail>();
   const [userAccount, setUserAccount] = useState<string>("");
   const providers = useSyncProviders();
 
   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
+    setProvider(providerWithInfo.provider);
     const accounts: any = await providerWithInfo.provider
       .request({ method: "eth_requestAccounts" })
       .catch(console.error);
@@ -21,26 +27,27 @@ const DiscoverWalletProviders = () => {
   };
 
   return (
-    <section className="wallets-detection">
-      <h2>Wallets Detected</h2>
-      <div>
-        {providers.length > 0 ? (
-          providers?.map((provider: EIP6963ProviderDetail) => (
-            <button
-              key={provider.info.uuid}
-              onClick={() => handleConnect(provider)}
-            >
-              <img src={provider.info.icon} alt={provider.info.name} />
-              <div>{provider.info.name}</div>
-            </button>
-          ))
-        ) : (
-          <div>There are no announced providers.</div>
-        )}
-      </div>
-      <hr />
-      <h2>{userAccount ? "" : "No "}Wallet Selected</h2>
-      {userAccount && (
+    <div>
+      <section className="wallets-detection">
+        <h2>Wallets Detected</h2>
+        <div>
+          {providers.length > 0 ? (
+            providers?.map((provider: EIP6963ProviderDetail) => (
+              <button
+                key={provider.info.uuid}
+                onClick={() => handleConnect(provider)}
+              >
+                <img src={provider.info.icon} alt={provider.info.name} />
+                <div>{provider.info.name}</div>
+              </button>
+            ))
+          ) : (
+            <div>There are no announced providers.</div>
+          )}
+        </div>
+        <hr />
+        <h2>{userAccount ? "" : "No "}Wallet Selected</h2>
+        {/* {userAccount && (
         <div>
           <div>
             <img
@@ -51,8 +58,9 @@ const DiscoverWalletProviders = () => {
             <div>{userAccount}</div>
           </div>
         </div>
-      )}
-    </section>
+      )} */}
+      </section>
+    </div>
   );
-}
-export default DiscoverWalletProviders
+};
+export default DiscoverWalletProviders;

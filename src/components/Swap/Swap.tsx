@@ -1,9 +1,10 @@
+import  DiscoverWalletProviders  from "../DetectWallets/DetectWallets";
 import "./Swap.css"
 
 const Swap = () => {
   return (
     <section id="swap">
-      <button>Connect Metamask</button>
+      <DiscoverWalletProviders />
     </section>
   );
 };

@@ -1,0 +1,19 @@
+.wallets-detection {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.wallets-detection > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.wallets-detection > div  img {
+  width: 80px;
+  height: 80px;
+}

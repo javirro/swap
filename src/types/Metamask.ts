@@ -24,4 +24,5 @@ export interface EIP1193Provider {
   sendAsync?: (request: { method: string, params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
   send?: (request: { method: string, params?: Array<unknown> }, callback: (error: Error | null, response: unknown) => void) => void
   request: (request: { method: string, params?: Array<unknown> }) => Promise<unknown>
+  on?: (event: string, callback: (event: unknown) => void) => void
 }

@@ -1,9 +1,27 @@
+#modal-detection {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
 .wallets-detection {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  width: 500px;
+  height: 300px;
+  background-color: rgb(142, 174, 255);
 }
 
 .wallets-detection > div {
@@ -13,7 +31,22 @@
   gap: 10px;
 }
 
-.wallets-detection > div  img {
-  width: 80px;
-  height: 80px;
+.wallets-detection > div button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 2px solid rgb(1, 14, 63);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.wallets-detection > div img {
+  width: 32px;
+}
+
+.wallets-detection > div strong {
+  font-size: 18px;
 }

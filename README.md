@@ -16,3 +16,4 @@ Using EIP-6963 which is recommended way by Metamask docs. It is modern alternati
 
 - https://eips.ethereum.org/EIPS/eip-6963
 
+With this method, we have a provider instance which can execute different functions like (request or send)

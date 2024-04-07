@@ -1,34 +1,53 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { EIP1193Provider } from "../../types/Metamask"
 import "./Swap.css"
 
-const Swap = () => {
-  const [provider, setProvider] = useState<EIP1193Provider>()
-  const [userAccount, setUserAccount] = useState<string>("")
-  const [chaindId, setChainId] = useState<string>("")
+interface SwapProps {
+  provider: EIP1193Provider
+  userAccount: string
+  chainId: string
+}
 
+const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
+  const [amount, setAmount] = useState<string>("")
+  const [from, setFrom] = useState<string>("ETH")
+  const [to, setTo] = useState<string>("ETH")
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(e.target.value)
+  }
 
-  useEffect(() => {
-    const getAccounts2 = async () => {
-      if (!provider) return
-      const chainId: string = await provider.request({ method: "eth_chainId" }) as string
-      setChainId(chainId)
-      console.log("chainId", chainId)
-      const accounts: string[] = (await provider.request({ method: "eth_requestAccounts" })) as string[]
-      console.log("account2", accounts)
-      //   const approveTx = await contract.methods.approve("0x73459845a971490Ba8E1F424A87aA79fad7Ff910", "1000000000000000000").send({from: accounts[0]})
-      //   console.log("balance", balance);
-      //   console.log("approveTx", approveTx);
-    }
-    if (provider) {
-      getAccounts2()
-    }
-  }, [provider])
+  const handleFromChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFrom(e.target.value)
+  }
 
+  const handleToChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTo(e.target.value)
+  }
+
+  console.log({ amount, from, to })
   return (
     <section id="swap">
-
+      <div className="input-container">
+        <section>
+          <h4>From</h4>
+          <div>
+            <select onChange={handleFromChange}>
+              <option value="ETH">ETH</option>
+            </select>
+            <input type="text" placeholder="0.0" value={amount} onChange={handleAmountChange} />
+          </div>
+        </section>
+        <section>
+          <h4>To</h4>
+          <div>
+            <select onChange={handleToChange}>
+              <option value="ETH">ETH</option>
+            </select>
+          </div>
+        </section>
+      </div>
+      <button>Swap</button>
     </section>
   )
 }

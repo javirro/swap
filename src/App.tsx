@@ -12,7 +12,7 @@ function App() {
   const bnbInfo = blockchain.networks?.find(network => network.chainId === NetworksChainId.bnb) as NetworkData
   const [provider, setProvider] = useState<EIP1193Provider>()
   const [userAccount, setUserAccount] = useState<string>("")
-  const [chaindId, setChainId] = useState<string>(bnbInfo?.chainId as string)
+  const [chainId, setChainId] = useState<string>(bnbInfo?.chainId as string)
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false)
 
   provider?.on?.("accountsChanged", (accounts: any) => {
@@ -27,10 +27,10 @@ function App() {
   return (
     <div className="App">
       {openWalletModal && (
-        <DiscoverWalletProviders setOpenWalletModal={setOpenWalletModal} setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} chaindId={chaindId} />
+        <DiscoverWalletProviders setOpenWalletModal={setOpenWalletModal} setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} chaindId={chainId} />
       )}
-      <Navbar setOpenWalletModal={setOpenWalletModal} chainId={chaindId} userAccount={userAccount} />
-      <Swap />
+      <Navbar setOpenWalletModal={setOpenWalletModal} chainId={chainId} userAccount={userAccount} />
+      <Swap provider={provider as EIP1193Provider} userAccount={userAccount} chainId={chainId}/>
     </div>
   )
 }

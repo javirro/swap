@@ -12,3 +12,8 @@
   overflow-x: hidden;
   background-color: #282c34;
 }
+
+:root{
+--darkest: rgb(13, 13, 15);
+--orange: rgb(254, 165, 0);
+}

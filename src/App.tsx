@@ -21,7 +21,7 @@ function App() {
 
   return (
     <div className="App">
-      {openWalletModal && <DiscoverWalletProviders setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} />}
+      {openWalletModal && <DiscoverWalletProviders  setOpenWalletModal={setOpenWalletModal} setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} />}
       <Navbar setOpenWalletModal = {setOpenWalletModal}/>
       <Swap />
     </div>

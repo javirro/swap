@@ -14,6 +14,7 @@ function App() {
   const [userAccount, setUserAccount] = useState<string>("")
   const [chaindId, setChainId] = useState<string>(bnbInfo?.chainId as string)
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false)
+
   provider?.on?.("accountsChanged", (accounts: any) => {
     setUserAccount(accounts[0])
   })
@@ -24,7 +25,7 @@ function App() {
 
   return (
     <div className="App">
-      {openWalletModal && <DiscoverWalletProviders  setOpenWalletModal={setOpenWalletModal} setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} />}
+      {openWalletModal && <DiscoverWalletProviders  setOpenWalletModal={setOpenWalletModal} setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} chaindId={chaindId} />}
       <Navbar setOpenWalletModal = {setOpenWalletModal}/>
       <Swap />
     </div>

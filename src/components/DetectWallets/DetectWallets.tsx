@@ -4,26 +4,63 @@ import { EIP6963ProviderDetail } from "../../types/Metamask"
 import useCloseModalClickOut from "../../hooks/useCloseModalClickOut"
 import "./DetectWallets.css"
 
-
 interface DiscoverWalletProvidersProps {
   setProvider: (provider: any) => void
   setUserAccount: (userAccount: string) => void
   setOpenWalletModal: (openWalletModal: boolean) => void
   userAccount: string
+  chaindId: string
 }
 
-const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, setOpenWalletModal }: DiscoverWalletProvidersProps) => {
-
+const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, chaindId, setOpenWalletModal }: DiscoverWalletProvidersProps) => {
   const [selectedWallet, setSelectedWallet] = useState<EIP6963ProviderDetail>()
   const providers = useSyncProviders()
 
   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
     setProvider(providerWithInfo.provider)
-    const accounts: any = await providerWithInfo.provider.request({ method: "eth_requestAccounts" }).catch(console.error)
+    try {
+      const accounts: any = await providerWithInfo.provider.request({ method: "eth_requestAccounts" })
+      if (accounts?.[0] as string) {
+        setSelectedWallet(providerWithInfo)
+        setUserAccount(accounts?.[0])
+      }
+    } catch (error) {
+      console.error("Error getting user account", error)
+    }
 
-    if (accounts?.[0] as string) {
-      setSelectedWallet(providerWithInfo)
-      setUserAccount(accounts?.[0])
+    try {
+      const hexChainId = (await providerWithInfo.provider.request({ method: "eth_chainId" })) as string
+      if (hexChainId) {
+        const userChainId: string = parseInt(hexChainId.slice(2), 16).toString()
+        if (userChainId === chaindId) {
+          setTimeout(() => {
+            setOpenWalletModal(false)
+          }, 1500)
+        } else {
+          try {
+            const hexSelectedChainId: string = parseInt(chaindId).toString(16)
+            await providerWithInfo.provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x" + hexSelectedChainId }] })
+          } catch (switchError) {
+            console.error("Error switch chain because network is not added to metamask", switchError)
+            // try {
+            //   await providerWithInfo.provider.request({
+            //     method: "wallet_addEthereumChain",
+            //     params: [
+            //       {
+            //         chainId: "0xf00",
+            //         chainName: "...",
+            //         rpcUrls: ["https://..."] /* ... */,
+            //       },
+            //     ],
+            //   })
+            // } catch (addError) {
+            //   console.error("Error adding new chain to wallet.", addError)
+            // }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error getting chainId", error)
     }
   }
 

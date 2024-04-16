@@ -2,6 +2,7 @@ import { useState } from "react"
 import { EIP1193Provider } from "../../types/Metamask"
 import "./Swap.css"
 import { blockchain } from "../../blockchain"
+import swapExactTokensForTokens from "../../blockchain/SwapMethods/swapExactTokensForTokens"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -29,6 +30,13 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
 
   console.log({ amount, from, to })
 
+  const handleSwap = async () => {
+    try {
+      await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
+    } catch (error) {
+      console.error("Error swapping tokens", error)
+    }
+  }
   return (
     <section id="swap">
       <div className="input-container">
@@ -58,7 +66,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           </div>
         </section>
       </div>
-      <button>Swap</button>
+      <button onClick={handleSwap}>Swap</button>
     </section>
   )
 }

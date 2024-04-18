@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { EIP1193Provider } from "../../types/Metamask"
-import "./Swap.css"
 import { blockchain } from "../../blockchain"
 import swapExactTokensForTokens from "../../blockchain/SwapMethods/swapExactTokensForTokens"
 import swapExactETHForTokens from "../../blockchain/SwapMethods/swapExactETHForTokens"
+
+import "./Swap.css"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -13,8 +14,8 @@ interface SwapProps {
 
 const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [amount, setAmount] = useState<string>("")
-  const [from, setFrom] = useState<string>("ETH")
-  const [to, setTo] = useState<string>("ETH")
+  const [from, setFrom] = useState<string>("BNB")
+  const [to, setTo] = useState<string>("USDT")
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
   const tokensNames = Object.keys(tokens)
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +62,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           <div>
             <select onChange={handleToChange}>
               {tokensNames.map(t => (
-                <option value={t} key={t}>
+                <option value={t} key={t} selected={t==="BNB"}>
                   {t.toUpperCase()}
                 </option>
               ))}

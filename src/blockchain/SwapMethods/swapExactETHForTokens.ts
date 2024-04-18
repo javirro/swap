@@ -16,10 +16,9 @@ const swapExactETHForTokens = async (amountIn: string, from: string, to: string,
   const deadline: number = new Date().getTime() + 1000 * 60 * 10
   const gasPrice = await web3.eth.getGasPrice()
 
-  console.log({ amountInWei, amountOutMin, path, userAccount, deadline, gasPrice })
-  const tx = await routerContract.methods.swapExactTokensForTokens(amountInWei, amountOutMin, path, userAccount, deadline, {
-    gasLimit: 1000000,
-    gasPrice,
+  console.log({ amountOutMin, path, userAccount, deadline, gasPrice })
+  const tx = await routerContract.methods.swapExactETHForTokens(amountOutMin, path, userAccount, deadline).send({
+    gasPrice: gasPrice.toString(),
     value: amountInWei,
     from: userAccount,
   })

@@ -16,9 +16,8 @@ const swapExactTokensForTokens = async (amountIn: string, from: string, to: stri
 
   const routerContract = new web3.eth.Contract(contractsAbi.pancakeswapV2RouterAbi, addresses.bscRouterV2)
   const tokenInContract = new web3.eth.Contract(contractsAbi.tokenAbi, fromAddress)
-  console.log({ tokenInContract })
   const tokenInDecimals: string = ((await tokenInContract.methods.decimals().call()) as any).toString()
-  console.log({ tokenInDecimals })
+
   const fixedAmountIn: string = amountIn.replace(",", ".")
 
   let amountInWei: string
@@ -31,7 +30,6 @@ const swapExactTokensForTokens = async (amountIn: string, from: string, to: stri
   const deadline: number = new Date().getTime() + 1000 * 60 * 10
   const gasPrice = await web3.eth.getGasPrice()
   const currentAllowance: number = await tokenInContract.methods.allowance(userAccount, addresses.bscRouterV2).call()
-  console.log({ currentAllowance, amountInWei })
   if (currentAllowance < parseFloat(amountInWei)) {
     const approveTx = await tokenInContract.methods.approve(addresses.bscRouterV2, amountInWei).send({
       from: userAccount,
@@ -40,10 +38,8 @@ const swapExactTokensForTokens = async (amountIn: string, from: string, to: stri
   }
 
   console.log({ amountInWei, amountOutMin, path, userAccount, deadline, gasPrice })
-  const tx = await routerContract.methods.swapExactTokensForTokens(amountInWei, amountOutMin, path, userAccount, deadline, {
-    gasLimit: 1000000,
-    gasPrice,
-    value: 0,
+  const tx = await routerContract.methods.swapExactTokensForTokens(amountInWei, amountOutMin, path, userAccount, deadline).send({
+    gasPrice: gasPrice.toString(),
     from: userAccount,
   })
 

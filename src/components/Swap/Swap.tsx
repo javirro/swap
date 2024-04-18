@@ -3,6 +3,7 @@ import { EIP1193Provider } from "../../types/Metamask"
 import "./Swap.css"
 import { blockchain } from "../../blockchain"
 import swapExactTokensForTokens from "../../blockchain/SwapMethods/swapExactTokensForTokens"
+import swapExactETHForTokens from "../../blockchain/SwapMethods/swapExactETHForTokens"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -28,11 +29,13 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     setTo(e.target.value)
   }
 
-  console.log({ amount, from, to })
-
   const handleSwap = async () => {
     try {
-      await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
+      if (from === "BNB") {
+        await swapExactETHForTokens(amount, from, to, provider, userAccount, chainId)
+      } else {
+        await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
+      }
     } catch (error) {
       console.error("Error swapping tokens", error)
     }

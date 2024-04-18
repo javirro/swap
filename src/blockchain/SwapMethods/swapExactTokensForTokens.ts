@@ -13,10 +13,13 @@ const swapExactTokensForTokens = async (amountIn: string, from: string, to: stri
   const amountOutMin = "0"
 
   const web3 = new Web3(provider)
+
   const routerContract = new web3.eth.Contract(contractsAbi.pancakeswapV2RouterAbi, addresses.bscRouterV2)
   const tokenInContract = new web3.eth.Contract(contractsAbi.tokenAbi, fromAddress)
+  console.log({ tokenInContract })
   const tokenInDecimals: string = ((await tokenInContract.methods.decimals().call()) as any).toString()
-  const fixedAmountIn = amountIn.replace(",", ".")
+  console.log({ tokenInDecimals })
+  const fixedAmountIn: string = amountIn.replace(",", ".")
 
   let amountInWei: string
   if (tokenInDecimals === "18") amountInWei = web3.utils.toWei(fixedAmountIn, "ether")
@@ -28,6 +31,7 @@ const swapExactTokensForTokens = async (amountIn: string, from: string, to: stri
   const deadline: number = new Date().getTime() + 1000 * 60 * 10
   const gasPrice = await web3.eth.getGasPrice()
   const currentAllowance: number = await tokenInContract.methods.allowance(userAccount, addresses.bscRouterV2).call()
+  console.log({ currentAllowance, amountInWei })
   if (currentAllowance < parseFloat(amountInWei)) {
     const approveTx = await tokenInContract.methods.approve(addresses.bscRouterV2, amountInWei).send({
       from: userAccount,

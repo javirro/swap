@@ -9,7 +9,7 @@ export const getBalance = async (provider: EIP1193Provider, tokenFromName: strin
   const web3 = new Web3(provider)
   const tokenAddress: string = tokenNameToAddress(tokenFromName, chainId)
   if (tokenFromName === "BNB") {
-    const weiBalance = (await web3.eth.getBalance(tokenAddress)).toString()
+    const weiBalance = (await web3.eth.getBalance(userAddress)).toString()
     const ethBalance = await web3.utils.fromWei(weiBalance, "ether")
     return { weiBalance, ethBalance }
   } else {

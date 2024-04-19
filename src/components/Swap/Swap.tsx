@@ -1,10 +1,12 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { EIP1193Provider } from "../../types/Metamask"
 import { blockchain } from "../../blockchain"
 import swapExactTokensForTokens from "../../blockchain/SwapMethods/swapExactTokensForTokens"
 import swapExactETHForTokens from "../../blockchain/SwapMethods/swapExactETHForTokens"
 
 import "./Swap.css"
+import { Balance } from "../../types/blockchain"
+import { getBalance } from "../../blockchain/SwapMethods/getBalance"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -13,6 +15,7 @@ interface SwapProps {
 }
 
 const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
+  const [balance, setBalance] = useState<Balance>({ weiBalance: "", ethBalance: "" })
   const [amount, setAmount] = useState<string>("")
   const [from, setFrom] = useState<string>("BNB")
   const [to, setTo] = useState<string>("USDT")
@@ -30,6 +33,15 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     setTo(e.target.value)
   }
 
+  useEffect(() => {
+    getBalance(provider, from, userAccount, chainId)
+      .then((b: Balance) => setBalance(b))
+      .catch(e => {
+        console.error("Error getting balance", e)
+      })
+  }, [provider, from, userAccount, chainId])
+
+  console.log(balance)
   const handleSwap = async () => {
     try {
       if (from === "BNB") {
@@ -62,7 +74,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           <div>
             <select onChange={handleToChange}>
               {tokensNames.map(t => (
-                <option value={t} key={t} selected={t==="BNB"}>
+                <option value={t} key={t} selected={t === "BNB"}>
                   {t.toUpperCase()}
                 </option>
               ))}

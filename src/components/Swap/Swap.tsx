@@ -3,10 +3,10 @@ import { EIP1193Provider } from "../../types/Metamask"
 import { blockchain } from "../../blockchain"
 import swapExactTokensForTokens from "../../blockchain/SwapMethods/swapExactTokensForTokens"
 import swapExactETHForTokens from "../../blockchain/SwapMethods/swapExactETHForTokens"
-
-import "./Swap.css"
 import { Balance } from "../../types/blockchain"
 import { getBalance } from "../../blockchain/SwapMethods/getBalance"
+
+import "./Swap.css"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -67,6 +67,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
               ))}
             </select>
             <input type="text" placeholder="0.0" value={amount} onChange={handleAmountChange} />
+            <button className="max">MAX</button>
           </div>
         </section>
         <section>
@@ -82,7 +83,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           </div>
         </section>
       </div>
-      <button onClick={handleSwap}>Swap</button>
+      <button onClick={handleSwap} className="swap-btn">Swap</button>
     </section>
   )
 }

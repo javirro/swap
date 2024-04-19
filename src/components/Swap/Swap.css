@@ -32,13 +32,6 @@
   width: 100%;
 }
 
-#swap .input-container div {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
 
 #swap .input-container h4 {
   color: white;
@@ -48,16 +41,26 @@
   margin: 0;
 }
 
+#swap .input-container div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 #swap .input-container input {
   padding: 10px;
   border: 2px solid var(--darkest);
   border-radius: 5px;
   font-size: 18px;
   box-sizing: border-box;
+  width: 50%;
 }
 
 #swap .input-container select {
-  width: 110px;
   padding: 10px;
   border: 2px solid var(--darkest);
   border-radius: 5px;
@@ -65,15 +68,23 @@
   cursor: pointer;
 }
 
-#swap  button {
-  width: 400px;
-  padding: 10px;
+#swap button {
   box-sizing: border-box;
+  border: none;
   background-color: var(--darkest);
   color: var(--orange);
-  font-size: 18px;
   font-weight: bold;
-  border: none;
-  border-radius: 12px;
+  font-size: 18px;
   cursor: pointer;
+}
+
+#swap .max {
+  padding: 10px;
+  border-radius: 4px;
+}
+
+#swap  .swap-btn {
+  width: 400px;
+  padding: 10px;
+  border-radius: 12px;
 }

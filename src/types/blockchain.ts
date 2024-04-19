@@ -12,3 +12,8 @@ export interface NetworkData {
   blockExplorerUrl: string
 
 }
+
+export interface Balance {
+  weiBalance: string
+  ethBalance: string
+}

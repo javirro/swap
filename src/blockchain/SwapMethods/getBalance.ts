@@ -8,7 +8,7 @@ import { Balance } from "../../types/blockchain"
 export const getBalance = async (provider: EIP1193Provider, tokenFromName: string, userAddress: string, chainId: string): Promise<Balance> => {
   const web3 = new Web3(provider)
   const tokenAddress: string = tokenNameToAddress(tokenFromName, chainId)
-  if (tokenFromName === "BNB") {
+  if (tokenFromName === "BNB" || tokenFromName === "bnb") {
     const weiBalance = (await web3.eth.getBalance(userAddress)).toString()
     const ethBalance = await web3.utils.fromWei(weiBalance, "ether")
     return { weiBalance, ethBalance }

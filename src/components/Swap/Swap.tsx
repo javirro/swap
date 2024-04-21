@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { EIP1193Provider } from "../../types/Metamask"
 import { blockchain } from "../../blockchain"
 import swapExactTokensForTokens from "../../blockchain/SwapMethods/swapExactTokensForTokens"
-import swapExactETHForTokens from "../../blockchain/SwapMethods/swapExactETHForTokens"
+import depositBNB from "../../blockchain/SwapMethods/depositBNB"
 import { Balance } from "../../types/blockchain"
 import { getBalance } from "../../blockchain/SwapMethods/getBalance"
 
@@ -17,20 +17,25 @@ interface SwapProps {
 const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [balance, setBalance] = useState<Balance>({ weiBalance: "", ethBalance: "" })
   const [amount, setAmount] = useState<string>("")
-  const [from, setFrom] = useState<string>("BNB")
-  const [to, setTo] = useState<string>("USDT")
+  const [from, setFrom] = useState<string>("bnb")
+  const [to, setTo] = useState<string>("usdt")
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
   const tokensNames = Object.keys(tokens)
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    const splited = value.split(".")
+    if (splited.length > 1 && splited[1].length > 9) return
     setAmount(e.target.value)
   }
 
   const handleFromChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFrom(e.target.value)
+    const value: string = e.target.value
+    setFrom(value.toLowerCase())
   }
 
   const handleToChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTo(e.target.value)
+    const value: string = e.target.value
+    setTo(value.toLowerCase())
   }
 
   useEffect(() => {
@@ -41,17 +46,20 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       })
   }, [provider, from, userAccount, chainId])
 
-  console.log(balance)
   const handleSwap = async () => {
     try {
-      if (from === "BNB") {
-        await swapExactETHForTokens(amount, from, to, provider, userAccount, chainId)
+      if (from === "bnb") {
+        await depositBNB(amount, userAccount, provider)
+        await swapExactTokensForTokens(amount, "wbnb", to, provider, userAccount, chainId)
       } else {
         await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
       }
     } catch (error) {
       console.error("Error swapping tokens", error)
     }
+  }
+  const handleMaxAmount = () => {
+    setAmount(balance?.ethBalance)
   }
   return (
     <section id="swap">
@@ -67,7 +75,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
               ))}
             </select>
             <input type="text" placeholder="0.0" value={amount} onChange={handleAmountChange} />
-            <button className="max">MAX</button>
+            <button className="max" onClick={handleMaxAmount}>MAX</button>
           </div>
         </section>
         <section>
@@ -75,7 +83,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           <div>
             <select onChange={handleToChange}>
               {tokensNames.map(t => (
-                <option value={t} key={t} selected={t === "BNB"}>
+                <option value={t.toUpperCase()} key={t} selected={t === "BNB"}>
                   {t.toUpperCase()}
                 </option>
               ))}

@@ -5,7 +5,7 @@ import swapExactTokensForTokens from "../../blockchain/SwapMethods/swapExactToke
 import depositBNB from "../../blockchain/SwapMethods/depositBNB"
 import { Balance } from "../../types/blockchain"
 import { getBalance } from "../../blockchain/SwapMethods/getBalance"
-
+import withdrawBNB, { getWbnbReceived } from "../../blockchain/SwapMethods/withdrawBNB"
 import "./Swap.css"
 
 interface SwapProps {
@@ -20,7 +20,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [from, setFrom] = useState<string>("bnb")
   const [to, setTo] = useState<string>("usdt")
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
-  const tokensNames = Object.keys(tokens)
+  const tokensNames: string[] = Object.keys(tokens)
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     const splited = value.split(".")
@@ -39,6 +39,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   }
 
   useEffect(() => {
+    if(!provider) return
     getBalance(provider, from, userAccount, chainId)
       .then((b: Balance) => setBalance(b))
       .catch(e => {
@@ -51,6 +52,10 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       if (from === "bnb") {
         await depositBNB(amount, userAccount, provider)
         await swapExactTokensForTokens(amount, "wbnb", to, provider, userAccount, chainId)
+      } else if (to === "bnb") {
+        const swapTx = await swapExactTokensForTokens(amount, from, "wbnb", provider, userAccount, chainId)
+        const wbnbAmount = getWbnbReceived(swapTx, userAccount)
+        await withdrawBNB(wbnbAmount?.toString(), userAccount, provider)
       } else {
         await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
       }
@@ -69,13 +74,15 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           <div>
             <select onChange={handleFromChange}>
               {tokensNames.map(t => (
-                <option value={t} key={t}>
+                <option value={t} key={t} selected={t === from}>
                   {t.toUpperCase()}
                 </option>
               ))}
             </select>
             <input type="text" placeholder="0.0" value={amount} onChange={handleAmountChange} />
-            <button className="max" onClick={handleMaxAmount}>MAX</button>
+            <button className="max" onClick={handleMaxAmount}>
+              MAX
+            </button>
           </div>
         </section>
         <section>
@@ -83,7 +90,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           <div>
             <select onChange={handleToChange}>
               {tokensNames.map(t => (
-                <option value={t.toUpperCase()} key={t} selected={t === "BNB"}>
+                <option value={t.toUpperCase()} key={t} selected={t === to}>
                   {t.toUpperCase()}
                 </option>
               ))}
@@ -91,7 +98,9 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           </div>
         </section>
       </div>
-      <button onClick={handleSwap} className="swap-btn">Swap</button>
+      <button onClick={handleSwap} className="swap-btn">
+        Swap
+      </button>
     </section>
   )
 }

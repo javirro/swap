@@ -19,7 +19,9 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [amount, setAmount] = useState<string>("")
   const [from, setFrom] = useState<string>("bnb")
   const [to, setTo] = useState<string>("usdt")
+  const [txHash, setTxHash] = useState<string>("")
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
+  const networkInfo = blockchain.networks.find(network => network.chainId === chainId)
   const tokensNames: string[] = Object.keys(tokens)
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -39,7 +41,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   }
 
   useEffect(() => {
-    if(!provider) return
+    if (!provider) return
     getBalance(provider, from, userAccount, chainId)
       .then((b: Balance) => setBalance(b))
       .catch(e => {
@@ -51,13 +53,15 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     try {
       if (from === "bnb") {
         await depositBNB(amount, userAccount, provider)
-        await swapExactTokensForTokens(amount, "wbnb", to, provider, userAccount, chainId)
+        const tx = await swapExactTokensForTokens(amount, "wbnb", to, provider, userAccount, chainId)
+        setTxHash(tx.transactionHash)
       } else if (to === "bnb") {
         const swapTx = await swapExactTokensForTokens(amount, from, "wbnb", provider, userAccount, chainId)
         const wbnbAmount = getWbnbReceived(swapTx, userAccount)
         await withdrawBNB(wbnbAmount?.toString(), userAccount, provider)
       } else {
-        await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
+        const tx = await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
+        setTxHash(tx.transactionHash)
       }
     } catch (error) {
       console.error("Error swapping tokens", error)
@@ -101,6 +105,11 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       <button onClick={handleSwap} className="swap-btn">
         Swap
       </button>
+      {txHash && (
+        <a href={networkInfo?.blockExplorerUrl + "/tx/" + txHash} target="blank_" rel="noreferrer">
+          See transaction on Scan
+        </a>
+      )}
     </section>
   )
 }

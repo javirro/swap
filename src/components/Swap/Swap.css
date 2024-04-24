@@ -88,3 +88,9 @@
   padding: 10px;
   border-radius: 12px;
 }
+
+#swap a {
+  color: var(--orange);
+  font-weight: bold;
+  font-size: 20px;
+}

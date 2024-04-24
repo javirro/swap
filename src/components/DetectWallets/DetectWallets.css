@@ -21,7 +21,8 @@
   gap: 20px;
   width: 500px;
   height: 300px;
-  background-color: rgb(142, 174, 255);
+  background-color: rgb(227, 119, 42);
+  border-radius: 20px;
 }
 
 .wallets-detection > div {
@@ -37,8 +38,8 @@
   align-items: center;
   gap: 10px;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border: 2px solid rgb(1, 14, 63);
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--darkest);
   border-radius: 5px;
   cursor: pointer;
 }
@@ -49,4 +50,9 @@
 
 .wallets-detection > div strong {
   font-size: 18px;
+}
+
+.wallets-detection > div span {
+  font-size: 16px;
+  font-weight: bold;
 }

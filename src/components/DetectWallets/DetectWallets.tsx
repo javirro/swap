@@ -86,7 +86,7 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
 
         {selectedWallet && (
           <div>
-            <span>User wallet: {userAccount}</span>
+            <span>{userAccount}</span>
           </div>
         )}
       </section>

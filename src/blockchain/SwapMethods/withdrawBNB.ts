@@ -5,9 +5,8 @@ import { hexToDecimal } from "../../utils/numberConversion"
 
 const withdrawBNB = async (wbnbAmount: string, userAddress: string, provider: EIP1193Provider) => {
   const web3 = new Web3(provider)
-  const weiAmount = web3.utils.toWei(wbnbAmount.toString(), "ether")
   const wbnbContract = new web3.eth.Contract(contractsAbi.wbnbAbi, "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c")
-  const withdrawTx = await wbnbContract.methods.withdraw(weiAmount).send({ from: userAddress })
+  const withdrawTx = await wbnbContract.methods.withdraw(wbnbAmount).send({ from: userAddress })
   return withdrawTx
 }
 

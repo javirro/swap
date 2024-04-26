@@ -3,10 +3,14 @@ import { EIP1193Provider } from "../../types/Metamask"
 import { contractsAbi } from "../contracts"
 import { hexToDecimal } from "../../utils/numberConversion"
 
-const withdrawBNB = async (wbnbAmount: string, userAddress: string, provider: EIP1193Provider) => {
+const withdrawBNB = async (wbnbAmount: string, userAddress: string, provider: EIP1193Provider, isAmountWei: boolean = true) => {
   const web3 = new Web3(provider)
+  let amountInWei: string = wbnbAmount
+  if (!isAmountWei) {
+    amountInWei = web3.utils.toWei(wbnbAmount, "ether")
+  }
   const wbnbContract = new web3.eth.Contract(contractsAbi.wbnbAbi, "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c")
-  const withdrawTx = await wbnbContract.methods.withdraw(wbnbAmount).send({ from: userAddress })
+  const withdrawTx = await wbnbContract.methods.withdraw(amountInWei).send({ from: userAddress })
   return withdrawTx
 }
 

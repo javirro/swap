@@ -23,6 +23,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
   const networkInfo = blockchain.networks.find(network => network.chainId === chainId)
   const tokensNames: string[] = Object.keys(tokens)
+
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     const splited = value.split(".")
@@ -55,10 +56,15 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         await depositBNB(amount, userAccount, provider)
         const tx = await swapExactTokensForTokens(amount, "wbnb", to, provider, userAccount, chainId)
         setTxHash(tx.transactionHash)
+      } else if (from === "wbnb" && to === "bnb") {
+        const isAmountWei: boolean = false
+        const tx = await withdrawBNB(amount, userAccount, provider, isAmountWei)
+        setTxHash(tx.transactionHash)
       } else if (to === "bnb") {
         const swapTx = await swapExactTokensForTokens(amount, from, "wbnb", provider, userAccount, chainId)
         const wbnbAmount = getWbnbReceived(swapTx, userAccount)
-        await withdrawBNB(wbnbAmount?.toString(), userAccount, provider)
+        const tx = await withdrawBNB(wbnbAmount?.toString(), userAccount, provider)
+        setTxHash(tx.transactionHash)
       } else {
         const tx = await swapExactTokensForTokens(amount, from, to, provider, userAccount, chainId)
         setTxHash(tx.transactionHash)

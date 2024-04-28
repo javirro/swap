@@ -1,12 +1,15 @@
 import { useState } from "react"
 import useSyncProviders from "../../hooks/useSyncProviders"
-import { EIP6963ProviderDetail } from "../../types/Metamask"
+import { EIP1193Provider, EIP6963ProviderDetail } from "../../types/Metamask"
 import useCloseModalClickOut from "../../hooks/useCloseModalClickOut"
+import { hexToDecimal } from "../../utils/numberConversion"
+import { getChaindId, getWalletAccounts, switchChain } from "../../blockchain/walletFunctions/walletFunctions"
+
 import "./DetectWallets.css"
-import { decimalToHex, hexToDecimal } from "../../utils/numberConversion"
+
 
 interface DiscoverWalletProvidersProps {
-  setProvider: (provider: any) => void
+  setProvider: (provider: EIP1193Provider) => void
   setUserAccount: (userAccount: string) => void
   setOpenWalletModal: (openWalletModal: boolean) => void
   userAccount: string
@@ -20,7 +23,7 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
     setProvider(providerWithInfo.provider)
     try {
-      const accounts: any = await providerWithInfo.provider.request({ method: "eth_requestAccounts" })
+      const accounts: string[] = await getWalletAccounts(providerWithInfo.provider)
       if (accounts?.[0] as string) {
         setSelectedWallet(providerWithInfo)
         setUserAccount(accounts?.[0])
@@ -30,7 +33,7 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
     }
 
     try {
-      const hexChainId = (await providerWithInfo.provider.request({ method: "eth_chainId" })) as string
+      const hexChainId: string = await getChaindId(providerWithInfo.provider)
       if (hexChainId) {
         const userChainId: string = hexToDecimal(hexChainId).toString()
         if (userChainId === chaindId) {
@@ -39,8 +42,7 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
           }, 1500)
         } else {
           try {
-            const hexSelectedChainId: string = decimalToHex(+chaindId)
-            await providerWithInfo.provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x" + hexSelectedChainId }] })
+            await switchChain(providerWithInfo.provider, chaindId)
           } catch (switchError) {
             console.error("Error switch chain because network is not added to metamask", switchError)
           }
@@ -50,7 +52,6 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
       console.error("Error getting chainId", error)
     }
   }
-
 
   const modalRef = useCloseModalClickOut(setOpenWalletModal)
   return (

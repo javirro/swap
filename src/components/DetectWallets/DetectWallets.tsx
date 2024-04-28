@@ -43,20 +43,6 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
             await providerWithInfo.provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x" + hexSelectedChainId }] })
           } catch (switchError) {
             console.error("Error switch chain because network is not added to metamask", switchError)
-            // try {
-            //   await providerWithInfo.provider.request({
-            //     method: "wallet_addEthereumChain",
-            //     params: [
-            //       {
-            //         chainId: "0xf00",
-            //         chainName: "...",
-            //         rpcUrls: ["https://..."] /* ... */,
-            //       },
-            //     ],
-            //   })
-            // } catch (addError) {
-            //   console.error("Error adding new chain to wallet.", addError)
-            // }
           }
         }
       }

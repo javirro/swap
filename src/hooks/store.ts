@@ -1,7 +1,7 @@
 import {
   EIP6963ProviderDetail,
   EIP6963AnnounceProviderEvent,
-} from "./types/Metamask";
+} from "../types/Metamask";
 
 declare global {
   interface WindowEventMap {
@@ -15,10 +15,10 @@ export const store = {
   value: () => providers,
   subscribe: (callback: () => void) => {
     function onAnnouncement(event: EIP6963AnnounceProviderEvent) {
-      if (providers.map((p) => p.info.uuid).includes(event.detail.info.uuid))
-        return;
-      providers = [...providers, event.detail];
-      callback();
+      const uuidProviderList: string[] = providers.map((p) => p.info.uuid)
+      if (uuidProviderList.includes(event.detail.info.uuid)) return;
+      providers = [...providers, event.detail]
+      callback()
     }
     window.addEventListener("eip6963:announceProvider", onAnnouncement);
     window.dispatchEvent(new Event("eip6963:requestProvider"));

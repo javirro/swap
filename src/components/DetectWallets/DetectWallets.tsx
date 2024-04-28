@@ -1,4 +1,4 @@
-import { useState } from "react"
+
 import useSyncProviders from "../../hooks/useSyncProviders"
 import { EIP1193Provider, EIP6963ProviderDetail } from "../../types/Metamask"
 import useCloseModalClickOut from "../../hooks/useCloseModalClickOut"
@@ -17,7 +17,6 @@ interface DiscoverWalletProvidersProps {
 }
 
 const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, chaindId, setOpenWalletModal }: DiscoverWalletProvidersProps) => {
-  const [selectedWallet, setSelectedWallet] = useState<EIP6963ProviderDetail>()
   const providers = useSyncProviders()
 
   const handleConnect = async (providerWithInfo: EIP6963ProviderDetail) => {
@@ -25,7 +24,6 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
     try {
       const accounts: string[] = await getWalletAccounts(providerWithInfo.provider)
       if (accounts?.[0] as string) {
-        setSelectedWallet(providerWithInfo)
         setUserAccount(accounts?.[0])
       }
     } catch (error) {
@@ -71,7 +69,7 @@ const DiscoverWalletProviders = ({ setProvider, setUserAccount, userAccount, cha
           )}
         </div>
 
-        {selectedWallet && (
+        {userAccount && userAccount !== "" && (
           <div>
             <span>{userAccount}</span>
           </div>

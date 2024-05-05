@@ -1,4 +1,3 @@
-
 import useSyncProviders from "../../hooks/useSyncProviders"
 import { EIP1193Provider, EIP6963ProviderDetail } from "../../types/Metamask"
 import useCloseModalClickOut from "../../hooks/useCloseModalClickOut"
@@ -6,7 +5,6 @@ import { hexToDecimal } from "../../utils/numberConversion"
 import { getChaindId, getWalletAccounts, switchChain } from "../../blockchain/walletFunctions/walletFunctions"
 
 import "./DetectWallets.css"
-
 
 interface DiscoverWalletProvidersProps {
   setProvider: (provider: EIP1193Provider) => void

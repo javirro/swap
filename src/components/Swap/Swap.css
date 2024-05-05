@@ -82,11 +82,20 @@
   padding: 10px;
   border-radius: 4px;
 }
+#swap .max:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 #swap  .swap-btn {
   width: 400px;
   padding: 10px;
   border-radius: 12px;
+}
+
+#swap .swap-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #swap a {

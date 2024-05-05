@@ -76,6 +76,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const handleMaxAmount = () => {
     setAmount(balance?.ethBalance)
   }
+  const filteredTokensNameTo = tokensNames.filter(t => t.toLowerCase() !== from.toLowerCase())
   return (
     <section id="swap">
       <div className="input-container">
@@ -90,7 +91,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
               ))}
             </select>
             <input type="text" placeholder="0.0" value={amount} onChange={handleAmountChange} />
-            <button className="max" onClick={handleMaxAmount}>
+            <button className="max" onClick={handleMaxAmount} disabled={!userAccount}>
               MAX
             </button>
           </div>
@@ -99,7 +100,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           <h4>To</h4>
           <div>
             <select onChange={handleToChange}>
-              {tokensNames.map(t => (
+              {filteredTokensNameTo.map(t => (
                 <option value={t.toUpperCase()} key={t} selected={t === to}>
                   {t.toUpperCase()}
                 </option>
@@ -108,7 +109,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
           </div>
         </section>
       </div>
-      <button onClick={handleSwap} className="swap-btn">
+      <button onClick={handleSwap} className="swap-btn" disabled={!userAccount}>
         Swap
       </button>
       {txHash && (

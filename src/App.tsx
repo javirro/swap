@@ -7,6 +7,7 @@ import { blockchain } from "./blockchain"
 import { NetworkData, NetworksChainId } from "./types/blockchain"
 import { hexToDecimal } from "./utils/numberConversion"
 import "./App.css"
+import Split from "./components/Split/Split"
 
 function App() {
   const bnbInfo = blockchain.networks?.find(network => network.chainId === NetworksChainId.bnb) as NetworkData
@@ -31,6 +32,7 @@ function App() {
       )}
       <Navbar setOpenWalletModal={setOpenWalletModal} chainId={chainId} userAccount={userAccount} />
       <Swap provider={provider as EIP1193Provider} userAccount={userAccount} chainId={chainId}/>
+      <Split provider={provider as EIP1193Provider} userAccount={userAccount} chainId={chainId}/>
     </div>
   )
 }

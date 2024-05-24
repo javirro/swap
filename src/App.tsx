@@ -15,6 +15,7 @@ function App() {
   const [userAccount, setUserAccount] = useState<string>("")
   const [chainId, setChainId] = useState<string>(bnbInfo?.chainId as string)
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false)
+  const [isSwap, setIsSwap] = useState<boolean>(true)
 
   provider?.on?.("accountsChanged", (accounts: any) => {
     setUserAccount(accounts[0])
@@ -28,11 +29,20 @@ function App() {
   return (
     <div className="App">
       {openWalletModal && (
-        <DiscoverWalletProviders setOpenWalletModal={setOpenWalletModal} setProvider={setProvider} setUserAccount={setUserAccount} userAccount={userAccount} chaindId={chainId} />
+        <DiscoverWalletProviders
+          setOpenWalletModal={setOpenWalletModal}
+          setProvider={setProvider}
+          setUserAccount={setUserAccount}
+          userAccount={userAccount}
+          chaindId={chainId}
+        />
       )}
-      <Navbar setOpenWalletModal={setOpenWalletModal} chainId={chainId} userAccount={userAccount} />
-      <Swap provider={provider as EIP1193Provider} userAccount={userAccount} chainId={chainId}/>
-      <Split provider={provider as EIP1193Provider} userAccount={userAccount} chainId={chainId}/>
+      <Navbar setOpenWalletModal={setOpenWalletModal} chainId={chainId} userAccount={userAccount} isSwap={isSwap} setIsSwap={setIsSwap} />
+      {isSwap ? (
+        <Swap provider={provider as EIP1193Provider} userAccount={userAccount} chainId={chainId} />
+      ) : (
+        <Split provider={provider as EIP1193Provider} userAccount={userAccount} chainId={chainId} />
+      )}
     </div>
   )
 }

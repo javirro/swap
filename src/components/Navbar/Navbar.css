@@ -21,7 +21,7 @@ nav .content strong {
   font-size: 20px;
 }
 
-nav .content button {
+nav .content .connect {
   padding: 10px;
   border: none;
   color:  var(--orange);
@@ -37,4 +37,31 @@ nav .content span {
   border-radius: 10px;
   padding: 10px;
   background-color: rgba(254, 165, 0, 0.1);
+}
+
+nav .content .buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  background-color: rgba(92, 64, 12, 0.1);
+  border-radius: px;
+}
+
+nav .content .buttons button {
+  width: 100px;
+  padding: 10px;
+  border: none;
+  color:  var(--orange);
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: rgba(255, 166, 0, 0.2);
+  cursor: pointer;
+}
+
+nav .content .buttons button.not {
+  background-color: rgba(125, 125, 125, 0.3);
+  color:  grey;
 }

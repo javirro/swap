@@ -1,0 +1,5 @@
+.tx-hash {
+  color: var(--orange);
+  font-weight: bold;
+  font-size: 20px;
+}

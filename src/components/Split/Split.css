@@ -48,3 +48,24 @@
   max-width: 100%;
   overflow: hidden;
 }
+
+#split button {
+  box-sizing: border-box;
+  border: none;
+  background-color: var(--darkest);
+  color: var(--orange);
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#split .split-btn {
+  width: 400px;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+#split .split-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

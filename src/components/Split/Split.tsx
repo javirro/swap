@@ -5,7 +5,9 @@ import { getBalance } from "../../blockchain/SwapMethods/getBalance"
 import { EIP1193Provider } from "../../types/Metamask"
 
 import "./Split.css"
+import "../common.css"
 import { blockchain } from "../../blockchain"
+import ShowTxHash from "../ShowTxHash/ShowTxHash"
 
 interface SplitProps {
   userAccount: string
@@ -21,6 +23,8 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
   const [percentage1, setPercentage1] = useState<number>(50)
   const [percentage2, setPercentage2] = useState<number>(50)
   const [balance, setBalance] = useState<Balance>({ weiBalance: "", ethBalance: "" })
+  const [txHash, setTxHash] = useState<string>("")
+
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
   const tokensNames: string[] = Object.keys(tokens)
   const filteredTokensNameTo = tokensNames.filter(t => t.toLowerCase() !== from.toLowerCase())
@@ -54,6 +58,7 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
     }
   }
 
+  const handleSplit = () => {}
   return (
     <section id="split">
       <div className="input-container">
@@ -90,6 +95,10 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
           </div>
         </section>
       </div>
+      <button onClick={handleSplit} className="split-btn" disabled={!userAccount}>
+        Split
+      </button>
+      {txHash && <ShowTxHash chainId={chainId} txHash={txHash} />}
     </section>
   )
 }

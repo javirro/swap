@@ -7,7 +7,8 @@ import { Balance } from "../../types/blockchain"
 import { getBalance } from "../../blockchain/SwapMethods/getBalance"
 import withdrawBNB, { getWbnbReceived } from "../../blockchain/SwapMethods/withdrawBNB"
 import "./Swap.css"
-
+import "../common.css"
+import ShowTxHash from "../ShowTxHash/ShowTxHash"
 interface SwapProps {
   provider: EIP1193Provider
   userAccount: string
@@ -21,7 +22,6 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [to, setTo] = useState<string>("usdt")
   const [txHash, setTxHash] = useState<string>("")
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
-  const networkInfo = blockchain.networks.find(network => network.chainId === chainId)
   const tokensNames: string[] = Object.keys(tokens)
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,11 +112,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       <button onClick={handleSwap} className="swap-btn" disabled={!userAccount}>
         Swap
       </button>
-      {txHash && (
-        <a href={networkInfo?.blockExplorerUrl + "/tx/" + txHash} target="blank_" rel="noreferrer">
-          See transaction on Scan
-        </a>
-      )}
+      {txHash && <ShowTxHash chainId={chainId} txHash={txHash} />}
     </section>
   )
 }

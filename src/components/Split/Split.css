@@ -21,3 +21,30 @@
   background: rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 }
+
+#split .to-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+#split .to-section h4 {
+  color: white;
+  font-size: 22px;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+}
+
+#split .to-section div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}

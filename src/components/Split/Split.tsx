@@ -28,7 +28,8 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
   const tokensNames: string[] = Object.keys(tokens)
   const filteredTokensNameTo = tokensNames.filter(t => t.toLowerCase() !== from.toLowerCase())
-
+// TODO
+  console.log(setTxHash)
   useEffect(() => {
     if (!provider) return
     getBalance(provider, from, userAccount, chainId)

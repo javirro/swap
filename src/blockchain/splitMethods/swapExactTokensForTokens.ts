@@ -18,7 +18,16 @@ interface SplitExactTokensForTokensParams {
   slippage?: number
 }
 
-export const splitExactTokensForTokens = async ({ provider, userAccount, chainId, from, tokenOutA, tokenOutB, percentageA,  amount }: SplitExactTokensForTokensParams) => {
+export const splitExactTokensForTokens = async ({
+  provider,
+  userAccount,
+  chainId,
+  from,
+  tokenOutA,
+  tokenOutB,
+  percentageA,
+  amount,
+}: SplitExactTokensForTokensParams) => {
   const tokensList: any = blockchain.tokens.find(token => token.chainId === chainId)?.tokens
   const contractAddress = addresses.splitContract
   const fromAddress: string = tokensList[from.toLowerCase()]
@@ -48,7 +57,7 @@ export const splitExactTokensForTokens = async ({ provider, userAccount, chainId
   // Check allowance and approve if needed
   const currentAllowance: number = await tokenInContract.methods.allowance(userAccount, contractAddress).call()
   if (currentAllowance < parseFloat(amountInWei)) {
-    await tokenInContract.methods.approve(contractAddress, amountInWei).send({ from: userAccount})
+    await tokenInContract.methods.approve(contractAddress, amountInWei).send({ from: userAccount })
   }
 
   const bpsA: number = percentageA * 100

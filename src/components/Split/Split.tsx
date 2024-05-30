@@ -3,11 +3,12 @@ import InputForm from "../InputForm/InputForm"
 import { Balance } from "../../types/blockchain"
 import { getBalance } from "../../blockchain/SwapMethods/getBalance"
 import { EIP1193Provider } from "../../types/Metamask"
+import { blockchain } from "../../blockchain"
+import ShowTxHash from "../ShowTxHash/ShowTxHash"
 
 import "./Split.css"
 import "../common.css"
-import { blockchain } from "../../blockchain"
-import ShowTxHash from "../ShowTxHash/ShowTxHash"
+import { splitExactTokensForTokens } from "../../blockchain/splitMethods/swapExactTokensForTokens"
 
 interface SplitProps {
   userAccount: string
@@ -15,21 +16,25 @@ interface SplitProps {
   provider: EIP1193Provider
 }
 
+enum TokenOut {
+  A = "A",
+  B = "B",
+}
+
 const Split = ({ userAccount, chainId, provider }: SplitProps) => {
   const [amount, setAmount] = useState<string>("")
   const [from, setFrom] = useState<string>("bnb")
-  const [to1, setTo1] = useState<string>("eth")
-  const [to2, setTo2] = useState<string>("usdt")
-  const [percentage1, setPercentage1] = useState<number>(50)
-  const [percentage2, setPercentage2] = useState<number>(50)
+  const [tokenOutA, setTokenOutA] = useState<string>("eth")
+  const [tokenOutB, setTokenOutB] = useState<string>("usdt")
+  const [percentageA, setPercentageA] = useState<number>(50)
+  const [percentageB, setPercentageB] = useState<number>(50)
   const [balance, setBalance] = useState<Balance>({ weiBalance: "", ethBalance: "" })
   const [txHash, setTxHash] = useState<string>("")
 
   const tokens = blockchain.tokens.find(token => token.chainId === chainId)?.tokens as Object
   const tokensNames: string[] = Object.keys(tokens)
   const filteredTokensNameTo = tokensNames.filter(t => t.toLowerCase() !== from.toLowerCase())
-// TODO
-  console.log(setTxHash)
+
   useEffect(() => {
     if (!provider) return
     getBalance(provider, from, userAccount, chainId)
@@ -44,22 +49,33 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
   }
   const handleToChange = (e: React.ChangeEvent<HTMLSelectElement>, token: string) => {
     const value: string = e.target.value
-    if (token === "to1") setTo1(value.toLowerCase())
-    else setTo2(value.toLowerCase())
+    if (token === TokenOut.A) setTokenOutA(value.toLowerCase())
+    else setTokenOutB(value.toLowerCase())
   }
 
   const handlePercentage = (e: React.ChangeEvent<HTMLInputElement>, token: string) => {
     const value: number = Number(e.target.value)
-    if (token === "to1") {
-      setPercentage1(value)
-      setPercentage2(100 - value)
+    if (token === TokenOut.A) {
+      setPercentageA(value)
+      setPercentageB(100 - value)
     } else {
-      setPercentage2(value)
-      setPercentage1(100 - value)
+      setPercentageB(value)
+      setPercentageA(100 - value)
     }
   }
 
-  const handleSplit = () => {}
+  const handleSplit = async () => {
+    if (!provider) return
+    if (from !== "bnb" && tokenOutA !== "bnb" && tokenOutB !== "bnb") {
+      try {
+        const tx = await splitExactTokensForTokens({ provider, from, tokenOutA, tokenOutB, percentageA, amount, userAccount, chainId })
+        setTxHash(tx.transactionHash)
+      } catch (error) {
+        console.error("Error splitting tokens", error)
+      }
+    }
+  }
+
   return (
     <section id="split">
       <div className="input-container">
@@ -75,24 +91,24 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
         <section className="to-section">
           <h4>To</h4>
           <div>
-            <select onChange={e => handleToChange(e, "to1")}>
+            <select onChange={e => handleToChange(e, TokenOut.A)}>
               {filteredTokensNameTo.map(t => (
-                <option value={t.toUpperCase()} key={t} selected={t === to1}>
+                <option value={t.toUpperCase()} key={t} selected={t === tokenOutA}>
                   {t.toUpperCase()}
                 </option>
               ))}
             </select>
-            <input type="number" placeholder="0.0" value={percentage1} onChange={e => handlePercentage(e, "to1")} />
+            <input type="number" placeholder="0.0" step={"0.01"} max="100" min="0" value={percentageA} onChange={e => handlePercentage(e, TokenOut.A)} />
           </div>
           <div>
-            <select onChange={e => handleToChange(e, "to2")}>
+            <select onChange={e => handleToChange(e, TokenOut.B)}>
               {filteredTokensNameTo.map(t => (
-                <option value={t.toUpperCase()} key={t} selected={t === to2}>
+                <option value={t.toUpperCase()} key={t} selected={t === tokenOutB}>
                   {t.toUpperCase()}
                 </option>
               ))}
             </select>
-            <input type="number" placeholder="0.0" step={"0.01"} max="100" min="0" value={percentage2} onChange={e => handlePercentage(e, "to2")} />
+            <input type="number" placeholder="0.0" step={"0.01"} max="100" min="0" value={percentageB} onChange={e => handlePercentage(e, TokenOut.B)} />
           </div>
         </section>
       </div>

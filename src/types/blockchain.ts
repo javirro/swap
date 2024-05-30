@@ -17,3 +17,4 @@ export interface Balance {
   weiBalance: string
   ethBalance: string
 }
+

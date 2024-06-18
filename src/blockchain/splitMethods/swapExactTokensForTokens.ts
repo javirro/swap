@@ -6,7 +6,7 @@ import { addresses } from "../contracts/addresses"
 import { etherToWeiConverter } from "../SwapMethods/tokenHelper"
 import { getPath } from "../SwapMethods/getPath"
 
-interface SplitExactTokensForTokensParams {
+export interface SplitExactTokensForTokensParams {
   provider: EIP1193Provider
   userAccount: string
   chainId: string

@@ -9,6 +9,8 @@ import ShowTxHash from "../ShowTxHash/ShowTxHash"
 import "./Split.css"
 import "../common.css"
 import { splitExactTokensForTokens } from "../../blockchain/splitMethods/swapExactTokensForTokens"
+import { swapETHForSplitTokens } from "../../blockchain/splitMethods/swapETHForSplitTokens"
+import { swapTokenForSplitETH } from "../../blockchain/splitMethods/swapTokenForSplitETH"
 
 interface SplitProps {
   userAccount: string
@@ -72,6 +74,20 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
         setTxHash(tx.transactionHash)
       } catch (error) {
         console.error("Error splitting tokens", error)
+      }
+    } else if (from === "bnb") {
+      try {
+        const tx = await swapETHForSplitTokens({ provider, from, tokenOutA, tokenOutB, percentageA, amount, userAccount, chainId })
+        setTxHash(tx.transactionHash)
+      } catch (error) {
+        console.error("Error splitting tokens when ETH as input", error)
+      }
+    } else if (tokenOutA === "bnb" || tokenOutB === "bnb") {
+      try {
+        const tx = await swapTokenForSplitETH({ provider, from, tokenOutA, tokenOutB, percentageA, amount, userAccount, chainId })
+        setTxHash(tx.transactionHash)
+      } catch (error) {
+        console.error("Error splitting tokens when BNB as output", error)
       }
     }
   }

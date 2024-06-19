@@ -5,13 +5,13 @@ import { getBalance } from "../../blockchain/SwapMethods/getBalance"
 import { EIP1193Provider } from "../../types/Metamask"
 import { blockchain } from "../../blockchain"
 import ShowTxHash from "../ShowTxHash/ShowTxHash"
-
-import "./Split.css"
-import "../common.css"
 import { splitExactTokensForTokens } from "../../blockchain/splitMethods/swapExactTokensForTokens"
 import { swapETHForSplitTokens } from "../../blockchain/splitMethods/swapETHForSplitTokens"
 import { swapTokenForSplitETH } from "../../blockchain/splitMethods/swapTokenForSplitETH"
-import useDebounceEstimation from "../../hooks/useDebounceEstimation"
+import "./Split.css"
+import "../common.css"
+
+
 
 interface SplitProps {
   userAccount: string
@@ -93,8 +93,7 @@ const Split = ({ userAccount, chainId, provider }: SplitProps) => {
     }
   }
 
-  const previewOutputA = useDebounceEstimation(amount, from, tokenOutA, provider, chainId)
-  console.log(previewOutputA)
+
   return (
     <section id="split">
       <div className="input-container">

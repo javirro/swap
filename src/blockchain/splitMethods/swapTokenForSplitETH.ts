@@ -17,7 +17,6 @@ export const swapTokenForSplitETH = async ({
   amount,
 }: SplitExactTokensForTokensParams) => {
   const tokensList: any = blockchain.tokens.find(token => token.chainId === chainId)?.tokens
-  const contractAddress = addresses.splitContract
   const fromAddress: string = tokensList[from.toLowerCase()]
   const amountOutMinA = "0"
   const amountOutMinB = "0"
@@ -60,7 +59,6 @@ export const swapTokenForSplitETH = async ({
   const bpsA: number = percentageA * 100
   const tx = await splitContract.methods.swapTokenForSplitETH(amountInWei, amountOutMinA, amountOutMinB, pathA, pathB, bpsA, userAccount, deadline).send({
     gasPrice:  Math.ceil(parseFloat(gasPrice.toString()) * 2).toString(),
-    gas: "2000000000000",
     from: userAccount,
   })
   return tx

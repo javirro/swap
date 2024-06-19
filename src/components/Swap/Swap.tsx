@@ -6,9 +6,12 @@ import depositBNB from "../../blockchain/SwapMethods/depositBNB"
 import { Balance } from "../../types/blockchain"
 import { getBalance } from "../../blockchain/SwapMethods/getBalance"
 import withdrawBNB, { getWbnbReceived } from "../../blockchain/SwapMethods/withdrawBNB"
+import ShowTxHash from "../ShowTxHash/ShowTxHash"
+import useDebounceEstimation from "../../hooks/useDebounceEstimation"
+
 import "./Swap.css"
 import "../common.css"
-import ShowTxHash from "../ShowTxHash/ShowTxHash"
+
 interface SwapProps {
   provider: EIP1193Provider
   userAccount: string
@@ -77,6 +80,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     setAmount(balance?.ethBalance)
   }
   const filteredTokensNameTo = tokensNames.filter(t => t.toLowerCase() !== from.toLowerCase())
+  const previewOutputA = useDebounceEstimation(amount, from, to, provider, chainId)
   return (
     <section id="swap">
       <div className="input-container">
@@ -106,6 +110,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
                 </option>
               ))}
             </select>
+            <span className="preview-amount">{previewOutputA}</span>
           </div>
         </section>
       </div>

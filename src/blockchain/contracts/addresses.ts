@@ -1,5 +1,6 @@
 export const addresses = {
   bscRouterV2: "0x10ED43C718714eb63d5aA57B78B54704E256024E",
   splitContract: "0x5a692d3bE0c26BE3f2df2Dcf7EA558F2917a6525",
-  splitEthContract: "0xDB2675Cb8f9E9b8d58564D8893FeAE17d3373236"
+  splitEthContract: "0xDB2675Cb8f9E9b8d58564D8893FeAE17d3373236",
+  adminContract: "0x03c2daC0b280b66885a15147c166DA638Dd4E705"
 }

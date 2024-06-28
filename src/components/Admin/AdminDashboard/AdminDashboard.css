@@ -1,0 +1,25 @@
+#admin h1 {
+  font-size: 3rem;
+  color: #fff;
+}
+
+#admin .middle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+#admin .middle form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+#admin .middle form div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

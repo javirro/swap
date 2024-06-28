@@ -19,7 +19,7 @@ interface SplitProps {
   provider: EIP1193Provider
 }
 
-enum TokenOut {
+export enum TokenOut {
   A = "A",
   B = "B",
 }

@@ -44,9 +44,7 @@ const AdminDashboard = ({ userAccount, chainId, provider }: AdminProps) => {
             <input type="number" placeholder="0.0" step={"0.01"} max="100" min="0" value={percentageA} onChange={e => handlePercentage(e, TokenOut.A)} />
             <input type="number" placeholder="0.0" step={"0.01"} max="100" min="0" value={percentageB} onChange={e => handlePercentage(e, TokenOut.B)} />
           </div>
-          <button className="update-btn" >
-            {!loading ? "Update percentages" : "Updating..."}
-          </button>
+          <button className="update-btn">{!loading ? "Update percentages" : "Updating..."}</button>
         </form>
       </div>
       {txHash && <ShowTxHash chainId={chainId} txHash={txHash} />}
